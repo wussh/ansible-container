@@ -89,12 +89,3 @@ Tags correspond to Ansible Core versions. Explore available tags on [Docker Hub]
 ## **Dockerfile Source**
 The Dockerfile for this image can be found on GitHub:  
 [alpine-docker/multi-arch-libs - Ansible Dockerfile](https://github.com/alpine-docker/multi-arch-libs/blob/master/ansible/Dockerfile)
-
----
-
-## **License**
-This project is open-source and distributed under the [MIT License](https://opensource.org/licenses/MIT).
-
----
-
-Feel free to adapt this README further to suit your project style or requirements!
