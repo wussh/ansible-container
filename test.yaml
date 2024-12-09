@@ -1,0 +1,47 @@
+---
+- name: Deploy and Install Classact Lugha with Custom Folder
+  hosts: windows
+  tasks:
+    - name: Ensure destination directory exists
+      ansible.windows.win_file:
+        path: D:\bahasa
+        state: directory
+
+    - name: Check if files already exist on target PC
+      ansible.windows.win_stat:
+        path: "D:\\bahasa\\{{ item | basename }}"
+      loop:
+        - /mnt/d/winrm/AESEncDecInstallerVer3.exe
+        - /mnt/d/winrm/Classact Lugha 2024 Installer.exe
+        - /mnt/d/winrm/Game.zip
+        - /mnt/d/winrm/Game.z01
+        - /mnt/d/winrm/Game.z02
+        - /mnt/d/winrm/Game.z03
+        - /mnt/d/winrm/License Key.txt
+      register: file_checks
+
+    - name: Copy files that do not exist on target PC
+      ansible.windows.win_copy:
+        src: "{{ item }}"
+        dest: "D:\\bahasa\\{{ item | basename }}"
+        remote_src: no
+      loop: "{{ file_checks.results | selectattr('stat.exists', 'equalto', false) | map(attribute='item') | list }}"
+      register: copy_results
+
+    - name: Install Classact Lugha 2024 to custom folder
+      ansible.windows.win_shell:
+        cmd: |
+          Start-Process -FilePath "D:\\bahasa\\Classact Lugha 2024 Installer.exe" `
+            -ArgumentList "/silent /DIR=D:\\Applications\\Classact Lugha 2024" -Wait
+
+    - name: Ensure Game folder exists in the custom folder
+      ansible.windows.win_file:
+        path: D:\Applications\Classact Lugha 2024\MainApp\NewBuild\Game
+        state: directory
+
+    - name: Extract Game.zip to the custom folder
+      community.windows.win_unzip:
+        src: D:\bahasa\Game.zip
+        dest: D:\Applications\Classact Lugha 2024\MainApp\NewBuild\Game
+        recurse: true
+        delete_archive: true        
