@@ -1,62 +1,68 @@
 ---
-- name: Deploy and Install Classact Lugha with Custom Folder
+- name: Install Classact
   hosts: windows
+  strategy: free
   tasks:
     - name: Ensure destination directory exists
       ansible.windows.win_file:
         path: D:\bahasa
         state: directory
 
-    - name: Check if files already exist on target PC
-      ansible.windows.win_stat:
-        path: "D:\\bahasa\\{{ item | basename }}"
-      loop:
-        - /mnt/d/winrm/AESEncDecInstallerVer3.exe
-        - /mnt/d/winrm/Classact Lugha 2024 Installer.exe
-        - /mnt/d/winrm/License Key.txt
-        - /mnt/d/winrm/Game.7z.001
-        - /mnt/d/winrm/Game.7z.002
-        - /mnt/d/winrm/Game.7z.003
-        - /mnt/d/winrm/Game.7z.004
-        - /mnt/d/winrm/Game.7z.005
-        - /mnt/d/winrm/Game.7z.006
-        - /mnt/d/winrm/Game.7z.007
-        - /mnt/d/winrm/Game.7z.008
-        - /mnt/d/winrm/Game.7z.009
-        - /mnt/d/winrm/Game.7z.010
-        - /mnt/d/winrm/Game.7z.011
-        - /mnt/d/winrm/Game.7z.012
-        - /mnt/d/winrm/Game.7z.013
-        - /mnt/d/winrm/Game.7z.014
-        - /mnt/d/winrm/Game.7z.015
-        - /mnt/d/winrm/Game.7z.016
-        - /mnt/d/winrm/Game.7z.017
-        - /mnt/d/winrm/Game.7z.018
-        - /mnt/d/winrm/Game.7z.019
-        - /mnt/d/winrm/Game.7z.020
-      register: file_checks
-
-    - name: Copy files that do not exist on target PC
+    - name: Copy files
       ansible.windows.win_copy:
         src: "{{ item }}"
-        dest: "D:\\bahasa\\{{ item | basename }}"
-        remote_src: yes
-      loop: "{{ file_checks.results | selectattr('stat.exists', 'equalto', false) | map(attribute='item') | list }}"
-      register: copy_results
+        dest: D:\bahasa\
+      loop: 
+        - 7z2409.exe
+        - AESEncDecInstallerVer3.exe
+        - Classact Lugha 2024 Installer.exe
+        - License Key.txt
+        - Game.7z.001
+        - Game.7z.002
+        - Game.7z.003
+        - Game.7z.004
+        - Game.7z.005
+        - Game.7z.006
+        - Game.7z.007
+        - Game.7z.008
+        - Game.7z.009
+        - Game.7z.010
+        - Game.7z.011
+        - Game.7z.012
+        - Game.7z.013
+        - Game.7z.014
+        - Game.7z.015
+        - Game.7z.016
+        - Game.7z.017
+        - Game.7z.018
+        - Game.7z.019
+        - Game.7z.020
 
     - name: Install Classact Lugha 2024 to custom folder
-      ansible.windows.win_shell:
-        cmd: |
-          Start-Process -FilePath "D:\\bahasa\\Classact Lugha 2024 Installer.exe" `
-            -ArgumentList "/silent /DIR=D:\\Applications\\Classact Lugha 2024" -Wait
+      ansible.windows.win_shell: |
+        Start-Process -FilePath "D:\\bahasa\\Classact Lugha 2024 Installer.exe" `
+          -ArgumentList "/silent /allusers /DIR=D:\\bahasa\\ClassactLugha2024" `
+          -NoNewWindow
 
     - name: Ensure Game folder exists in the custom folder
       ansible.windows.win_file:
-        path: D:\Applications\Classact Lugha 2024\MainApp\NewBuild\Game
+        path: D:\bahasa\ClassactLugha2024\MainApp\NewBuild\Game
         state: directory
 
-    - name: Extract Game.7z to the custom folder
-      community.windows.win_unzip:
-        src: D:\bahasa\Game.7z
-        dest: D:\Applications\Classact Lugha 2024\MainApp\NewBuild\Game
-        recurse: true
+    - name: Install 7zip
+      ansible.windows.win_package:
+        path: D:\\bahasa\\7z2409.exe
+        product_id: 7-Zip
+        arguments: /S
+        state: present
+
+    - name: Extract Game.7z.001 to the custom folder
+      ansible.windows.win_shell: |
+        & "C:\\Program Files\\7-Zip\\7z.exe" x "D:\\bahasa\\Game.7z.001" `
+          -o"D:\\bahasa\\ClassactLugha2024\\MainApp\\NewBuild\\Game" -y -p`* -scsUTF-8
+
+    - name: Uninstall 7zip without specifying the path
+      ansible.windows.win_package:
+        product_id: 7-Zip
+        arguments: /S
+        state: absent
