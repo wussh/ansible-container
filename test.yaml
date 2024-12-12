@@ -60,7 +60,7 @@
     - name: Unzip .7z
       community.windows.win_unzip:
         src: D:\bahasa\Game.7z.001
-        dest: D:\bahasa\ClassactLugha2024\MainApp\NewBuild\Game
+        dest: D:\bahasa\ClassactLugha2024\MainApp\NewBuild
       register: unzip_result 
       failed_when: unzip_result.rc != 0
 
