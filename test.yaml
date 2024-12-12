@@ -13,11 +13,27 @@
       loop:
         - /mnt/d/winrm/AESEncDecInstallerVer3.exe
         - /mnt/d/winrm/Classact Lugha 2024 Installer.exe
-        - /mnt/d/winrm/Game.zip
-        - /mnt/d/winrm/Game.z01
-        - /mnt/d/winrm/Game.z02
-        - /mnt/d/winrm/Game.z03
         - /mnt/d/winrm/License Key.txt
+        - /mnt/d/winrm/Game.7z
+        - /mnt/d/winrm/Game.7z.002
+        - /mnt/d/winrm/Game.7z.003
+        - /mnt/d/winrm/Game.7z.004
+        - /mnt/d/winrm/Game.7z.005
+        - /mnt/d/winrm/Game.7z.006
+        - /mnt/d/winrm/Game.7z.007
+        - /mnt/d/winrm/Game.7z.008
+        - /mnt/d/winrm/Game.7z.009
+        - /mnt/d/winrm/Game.7z.010
+        - /mnt/d/winrm/Game.7z.011
+        - /mnt/d/winrm/Game.7z.012
+        - /mnt/d/winrm/Game.7z.013
+        - /mnt/d/winrm/Game.7z.014
+        - /mnt/d/winrm/Game.7z.015
+        - /mnt/d/winrm/Game.7z.016
+        - /mnt/d/winrm/Game.7z.017
+        - /mnt/d/winrm/Game.7z.018
+        - /mnt/d/winrm/Game.7z.019
+        - /mnt/d/winrm/Game.7z.020
       register: file_checks
 
     - name: Copy files that do not exist on target PC
