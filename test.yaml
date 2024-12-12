@@ -42,21 +42,21 @@
         Start-Process -FilePath "D:\\bahasa\\Classact Lugha 2024 Installer.exe" `
           -ArgumentList "/silent /allusers /DIR=D:\\bahasa\\ClassactLugha2024" `
           -NoNewWindow
-
-    - name: Ensure Game folder exists in the custom folder
-      ansible.windows.win_file:
-        path: D:\bahasa\ClassactLugha2024\MainApp\NewBuild\Game
-        state: directory
     
-    - name: Install PSCX module for all users
+    - name: Install PSCX
       win_shell: |
         Install-Module -Name Pscx -RequiredVersion 3.3.2 -Force -AllowClobber -Scope CurrentUser
 
-    - name: Install Pscx module for all users
+    - name: Check PSCX
       win_shell: |
         Get-Module -ListAvailable PSCX
 
-    - name: Unzip .7z
+    - name: Ensure Game folder
+      ansible.windows.win_file:
+        path: D:\bahasa\ClassactLugha2024\MainApp\NewBuild\Game
+        state: directory
+        
+    - name: Unzip
       community.windows.win_unzip:
         src: D:\bahasa\Game.7z.001
         dest: D:\bahasa\ClassactLugha2024\MainApp\NewBuild
