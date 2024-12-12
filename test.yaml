@@ -48,21 +48,22 @@
       ansible.windows.win_file:
         path: D:\bahasa\ClassactLugha2024\MainApp\NewBuild\Game
         state: directory
+    
+    - name: Install PSCX module for all users
+      win_shell: |
+        Install-Module -Name Pscx -RequiredVersion 3.3.2 -Force -AllowClobber -Scope CurrentUser
 
-    - name: Install 7zip
-      ansible.windows.win_package:
-        path: D:\\bahasa\\7z2409.exe
-        product_id: 7-Zip
-        arguments: /S
-        state: present
+    - name: Install Pscx module for all users
+      win_shell: |
+        Get-Module -ListAvailable PSCX
 
-    - name: Extract Game.7z.001 to the custom folder
-      ansible.windows.win_shell: |
-        & "C:\\Program Files\\7-Zip\\7z.exe" x "D:\\bahasa\\Game.7z.001" `
-          -o"D:\\bahasa\\ClassactLugha2024\\MainApp\\NewBuild\\Game" -y -p`* -scsUTF-8
+    - name: Unzip .7z
+      community.windows.win_unzip:
+        src: D:\bahasa\Game.7z.001
+        dest: D:\bahasa\ClassactLugha2024\MainApp\NewBuild\Game
+      register: unzip_result 
+      failed_when: unzip_result.rc != 0
 
-    - name: Uninstall 7zip without specifying the path
-      ansible.windows.win_package:
-        product_id: 7-Zip
-        arguments: /S
-        state: absent
+    - name: Check Unzip Status
+      debug:
+        msg: "Unzip status: {{ unzip_result.changed }}"
