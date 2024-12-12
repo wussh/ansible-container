@@ -13,7 +13,6 @@
         src: "{{ item }}"
         dest: D:\bahasa\
       loop: 
-        - 7z2409.exe
         - AESEncDecInstallerVer3.exe
         - Classact Lugha 2024 Installer.exe
         - License Key.txt
