@@ -40,7 +40,7 @@
       ansible.windows.win_copy:
         src: "{{ item }}"
         dest: "D:\\bahasa\\{{ item | basename }}"
-        remote_src: no
+        remote_src: yes
       loop: "{{ file_checks.results | selectattr('stat.exists', 'equalto', false) | map(attribute='item') | list }}"
       register: copy_results
 
@@ -55,9 +55,8 @@
         path: D:\Applications\Classact Lugha 2024\MainApp\NewBuild\Game
         state: directory
 
-    - name: Extract Game.zip to the custom folder
+    - name: Extract Game.7z to the custom folder
       community.windows.win_unzip:
-        src: D:\bahasa\Game.zip
+        src: D:\bahasa\Game.7z
         dest: D:\Applications\Classact Lugha 2024\MainApp\NewBuild\Game
         recurse: true
-        delete_archive: true        
